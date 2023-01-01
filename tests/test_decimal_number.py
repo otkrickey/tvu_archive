@@ -3,42 +3,6 @@ import pytest
 import numpy as np
 from tvu.decimal import DecimalNumber
 
-# case_keys: str
-case_keys = [
-    '12', '0', '-12',
-    '1.2', '0.0', '-1.2',
-    'np.int16(12)', 'np.int16(0)', 'np.int16(-12)',
-    'np.int32(12)', 'np.int32(0)', 'np.int32(-12)',
-    'np.int64(12)', 'np.int64(0)', 'np.int64(-12)']
-# case_args: int | float | np.int16 | np.int32 | np.int64
-case_args = [
-    12, 0, -12,
-    1.2, 0.0, -1.2,
-    np.int16(12), np.int16(0), np.int16(-12),
-    np.int32(12), np.int32(0), np.int32(-12),
-    np.int64(12), np.int64(0), np.int64(-12)]
-# case_params: (s:int, x:int, e:int)
-case_params = [
-    (1, 12, 0), (0, 0, 0), (-1, 12, 0),
-    (1, 12, -1), (0, 0, 0), (-1, 12, -1),
-    (1, 12, 0), (0, 0, 0), (-1, 12, 0),
-    (1, 12, 0), (0, 0, 0), (-1, 12, 0),
-    (1, 12, 0), (0, 0, 0), (-1, 12, 0),]
-# case_div_by_2: int | float | np.int16 | np.int32 | np.int64
-case_div_by_2 = [
-    6, 0, -6,
-    0.6, 0, -0.6,
-    np.int16(6), np.int16(0), np.int16(-6),
-    np.int32(6), np.int32(0), np.int32(-6),
-    np.int64(6), np.int64(0), np.int64(-6)]
-# case_repr: str
-case_repr = [
-    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
-    'DecimalNumber(12e-1)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e-1)',
-    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
-    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)',
-    'DecimalNumber(12e0)', 'DecimalNumber(0e0)', 'DecimalNumber(-12e0)']
-
 
 class TestDecimalNumber_constructor:
     """Test DecimalNumber.__init__"""
