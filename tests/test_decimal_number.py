@@ -1,7 +1,7 @@
 import random
 import pytest
 import numpy as np
-from tvu.decimal import DecimalNumber
+from tvu.decimal_value import DecimalNumber
 
 
 class TestDecimalNumber_constructor:
