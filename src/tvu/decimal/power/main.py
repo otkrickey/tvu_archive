@@ -5,7 +5,7 @@ from .npint_power import npint_power
 
 
 def decimal_power(x: int | float | np.integer) -> tuple[int, int]:
-    """Calculates the power of a float.
+    """Calculates the power of the number.
 
     Parameters
     ----------

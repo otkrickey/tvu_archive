@@ -1,17 +1,10 @@
 import numpy as np
-
+import warnings
 from .power import decimal_power
 
 
 class DecimalNumber:
-    """
-    DecimalNumber is a class that represents a number in decimal form.
-
-
-    Parameters
-    ----------
-    x : int | float | np.integer
-        The number to be represented in decimal form.
+    """DecimalNumber is a class that represents a number in decimal form.
 
     Attributes
     ----------
@@ -27,7 +20,7 @@ class DecimalNumber:
         The exponent of the number.
 
     """
-    _x: int | float | np.integer
+    _x: int | float | np.integer | str
     s: int
     x: int
     e: int
@@ -46,6 +39,13 @@ class DecimalNumber:
             self._x = x * 10 ** e
             self.s = (1 if x > 0 else -1 if x < 0 else 0) * (1 if s is None else s)
             self.x, self.e = int(abs(x)), e
+        elif isinstance(x, str):
+            self._x = x
+            dp = x.find('.')
+            __ = x.find('e')
+            self.x = int(x[:(__ if __ != -1 else None)].replace('-', '').replace('.', ''))
+            self.e = 0 if dp == -1 else (dp - (__ if __ != -1 else len(x)) + 1 + (0 if __ == -1 else int(x[__ + 1:])))
+            self.s = -1 if x.find('-') == 0 else 0 if self.x == 0 else 1
         elif not isinstance(x, np.floating) and isinstance(x, int | float | np.integer):
             self._x = x
             self.s = 1 if x > 0 else -1 if x < 0 else 0
@@ -53,13 +53,30 @@ class DecimalNumber:
         else:
             raise TypeError(f"Unsupported type {type(x)}")
 
+    # public methods
+    def ie(self, e: int) -> None:
+        """ie is a method that changes the exponent of the number.
+
+        Parameters
+        ----------
+        e : int
+            The number which is added to the exponent of the number.
+            Preferred: e is a positive integer.
+        """
+        if not e > 0:
+            warnings.warn(f"e is not a positive integer: {e}")
+            warnings.warn("This action can cause a loss of precision.")
+        self.e += e
+        self.x *= 10 ** e
+
+    # private methods
     def __repr__(self) -> str:
         s = '-' if self.s == -1 else ''
-        e = f'e{self.e}' if self.e != 0 else ''
-        return f"DecimalNumber({s}{self.x}{e})"
+        return f"DecimalNumber({s}{self.x}e{self.e})"
 
     def __str__(self) -> str:
-        return f"{self.x}e{self.e}"
+        s = '-' if self.s == -1 else ''
+        return f"{s}{self.x}e{self.e}"
 
     def __eq__(self, other) -> bool:
         other = DecimalNumber(other)
@@ -125,7 +142,7 @@ class DecimalNumber:
 
     def __truediv__(self, other) -> 'DecimalNumber':
         other = DecimalNumber(other)
-        return DecimalNumber(int(self.s * self.x / (other.s * other.x)), self.e - other.e)
+        return DecimalNumber(self.s * self.x / (other.s * other.x), self.e - other.e)
 
     def __floordiv__(self, other) -> 'DecimalNumber':
         other = DecimalNumber(other)
@@ -136,6 +153,12 @@ class DecimalNumber:
         return DecimalNumber(self.s * self.x % (other.s * other.x), self.e - other.e)
 
     def __pow__(self, other) -> 'DecimalNumber':
+        """
+
+        Cautions
+        --------
+        This method is not accurate.
+        """
         other = DecimalNumber(other)
         power = self.e * other.X
         return DecimalNumber(((self.s * self.x) ** other.X) * 10 ** (power - int(power)), int(power))
@@ -227,7 +250,7 @@ class DecimalNumber:
         elif self.e == 0:
             return self.s * self.x
         else:
-            return self.s * int(str(self.x)[:-self.e])
+            return self.s * int(str(self.x)[:self.e])
 
     def __float__(self) -> float:
         return float(self.s * self.x * 10 ** self.e)
